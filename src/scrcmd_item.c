@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "constants/heap.h"
+#include "constants/items.h"
 
 #include "field/field_system.h"
 
@@ -11,6 +12,8 @@
 #include "field_script_context.h"
 #include "inlines.h"
 #include "item.h"
+#include "savedata.h"
+#include "special_encounter.h"
 #include "unk_0205DFC4.h"
 
 BOOL ScrCmd_AddItem(ScriptContext *ctx)
@@ -84,6 +87,21 @@ BOOL ScrCmd_GetItemPocket(ScriptContext *ctx)
     u16 *pocket = ScriptContext_GetVarPointer(ctx);
 
     *pocket = (u16)Item_LoadParam(item, ITEM_PARAM_FIELD_POCKET, HEAP_ID_FIELD2);
+    return FALSE;
+}
+
+BOOL ScrCmd_SetRepelStepsFromItem(ScriptContext *ctx)
+{
+    u16 item = ScriptContext_GetVar(ctx);
+
+    if (item != ITEM_REPEL && item != ITEM_SUPER_REPEL && item != ITEM_MAX_REPEL) {
+        return FALSE;
+    }
+
+    u8 steps = (u8)Item_LoadParam(item, ITEM_PARAM_EFFECT_PARAM, HEAP_ID_FIELD1);
+    u8 *repelSteps = SpecialEncounter_GetRepelSteps(SaveData_GetSpecialEncounters(ctx->fieldSystem->saveData));
+    *repelSteps = steps;
+
     return FALSE;
 }
 
