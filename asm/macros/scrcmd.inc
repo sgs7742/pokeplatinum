@@ -4995,6 +4995,12 @@
     .byte \floor
     .endm
 
+    // item is a Repel, Super Repel, or Max Repel. Sets the remaining step count from that item's data.
+    .macro SetRepelStepsFromItem item
+    .short SCRCMD_SETREPELSTEPSFROMITEM
+    .short \item
+    .endm
+
 
 
     .macro GoToIfLt varID, valueOrVarID, offset
